@@ -10,7 +10,6 @@ $app->post("/createlesson","createLesson");
 $app->post("/homework","homework");
 $app->post("/deletelesson","deleteLesson");
 $app->post("/updategrade","updategrade");
-$app->post("/newgrade","newgrade");
 $app->get("/:id_student/:id_lesson","get_grade");
 
 //admin
