@@ -149,7 +149,7 @@ function get_info()
 	$request = Slim::getInstance()->request()->getBody();
 	$request = str_replace('"','"',$request);
 	$json_string = json_decode($request, True);
-	echo $json_string['Exercises'][0]['ExerciseName'];
+	echo $json_string['Exercises'][0]['Units'][0]['Answer']['Image'][0];
 }
 //grade
 function newgrade($id_student, $id_lesson, $id_teacher, $grade){
