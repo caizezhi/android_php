@@ -132,7 +132,7 @@ function deleteLesson(){
 }
 
 function checklesson($id_lesson){
-	$request = Slim::getInstance()->request();
+	$id_lesson = trim($id_lesson);
 	$sql = "SELECT `uid` FROM `private_lesson` WHERE `uid`='{$id_lesson}'";
 	$db = dbMysql();
 	$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -148,8 +148,25 @@ function get_info()
 {
 	$request = Slim::getInstance()->request()->getBody();
 	$request = str_replace('"','"',$request);
+	global $json_string;
 	$json_string = json_decode($request, True);
-	echo $json_string['Exercises'][0]['Units'][0]['Answer']['Image'][0];
+	output(array("action"=>"get_json"));
+}
+
+
+function get_para(){
+	global $json_string;
+	$request = Slim::getInstance()->request();
+	$is_voice = trim($request->post('is_voice'));
+	$para1 = trim($request->post('para1'));
+	$para2 = trim($request->post('para2'));
+	$para3 = trim($request->post('para3'));
+	if($is_voice){
+		echo $json_string['Exercises'][$para1]['Units'][$para2]['Voice'][$para3];
+	}
+	else{
+		echo $json_string['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3];
+	}
 }
 //grade
 function newgrade($id_student, $id_lesson, $id_teacher, $grade){
