@@ -11,7 +11,7 @@ $app->post("/homework","homework");
 $app->post("/deletelesson","deleteLesson");
 $app->post("/updategrade","updategrade");
 $app->get("/:id_student/:id_lesson","get_grade");
-
+$app->post("/test_json","get_info");
 //admin
 $app->post("/admin/login","login");
 $app->post("/admin/register","register");
