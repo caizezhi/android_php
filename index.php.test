@@ -1,0 +1,14 @@
+<?php
+$user = $_POST["user"];
+$name = array('name'=>$user);
+echo json_encode($name);
+$pwd  = $_POST["pwd"];
+$pass = array('pass'=>$pwd);
+echo json_encode($pass);
+$school = array('school'=>$_POST["school"]);
+echo json_encode($school);
+$nickname = array('nickname'=>$_POST["nickname"]);
+echo json_encode($nickname);
+$is_teacher = array('is_teacher'=>$_POST["is_teacher"]);
+echo json_encode($is_teacher);
+?>
