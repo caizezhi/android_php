@@ -144,10 +144,13 @@ function checklesson($id_lesson){
 	}
 }
 
-function get_info(){
-
+function get_info()
+{
+	$request = Slim::getInstance()->request()->getBody();
+	$request = str_replace('"','"',$request);
+	$json_string = json_decode($request, True);
+	echo $json_string[''];
 }
-
 //grade
 function newgrade($id_student, $id_lesson, $id_teacher, $grade){
 	$db = dbMysql();
