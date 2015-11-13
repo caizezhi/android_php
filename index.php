@@ -12,7 +12,6 @@ $app->post("/deletelesson","deleteLesson");
 $app->post("/updategrade","updategrade");
 $app->get("/:id_student/:id_lesson","get_grade");
 $app->post("/test_json","get_info");
-$app->post("/test_para","get_para");
 //admin
 $app->post("/admin/login","login");
 $app->post("/admin/register","register");

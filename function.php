@@ -147,27 +147,22 @@ function checklesson($id_lesson){
 
 function get_info()
 {
-	$request = Slim::getInstance()->request()->getBody();
+	$request_get = Slim::getInstance()->request();
+	$request = trim($request_get->post('json'));
+	$para1 = trim($request_get->post('para1'));
+	$para2 = trim($request_get->post('para2'));
+	$para3 = trim($request_get->post('para3'));
+	$is_voice = trim($request_get->post('is_voice'));
 	$request = str_replace('"','"',$request);
-	$GLOBALS['json_string'] = json_decode($request, True);
-	output(array("action"=>"get_json"));
-}
-
-
-function get_para(){
-	$GLOBALS['json_string']['Exercises'][0]['Units'][0]['Answer']['Image'][0];
-	$request = Slim::getInstance()->request();
-	$is_voice = trim($request->post('is_voice'));
-	$para1 = trim($request->post('para1'));
-	$para2 = trim($request->post('para2'));
-	$para3 = trim($request->post('para3'));
+	$json_string = json_decode($request, True);
 	if($is_voice){
-		echo $GLOBALS['json_string']['Exercises'][$para1]['Units'][$para2]['Voice'][$para3];
+		echo $json_string['Exercises'][$para1]['Units'][$para2]['Voice'][$para3];
 	}
 	else{
-		echo $GLOBALS['json_string']['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3];
-	}
+		echo $json_string['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3];
 }
+}
+
 //grade
 function newgrade($id_student, $id_lesson, $id_teacher, $grade){
 	$db = dbMysql();
