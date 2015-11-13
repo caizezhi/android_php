@@ -9,7 +9,8 @@ $app->post("/uploadVoi","uploadVoi");
 $app->post("/createlesson","createLesson");
 $app->post("/homework","homework");
 $app->post("/deletelesson","deleteLesson");
-$app->post("/updatemark","updatemark");
+$app->post("/updategrade","updategrade");
+$app->post("/newgrade","newgrade");
 $app->get("/:id_student/:id_lesson","get_grade");
 
 //admin

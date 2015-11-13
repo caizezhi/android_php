@@ -148,6 +148,52 @@ function get_info(){
 
 }
 
+//grade
+function newgrade(){
+	
+}
+
+function updategrade(){
+	$request = Slim::getInstance()->request();
+	$db = dbMysql();
+	$id_student = trim($request->post('id_student'));
+	$id_lesson = trim($request->post('id_lesson'));
+	$id_teacher = trim($request->post('id_teacher'));
+	$grade = trim($request->post('grade'));
+	$sql = "UPDATE `grade` SET `grade` = '{$grade}' WHERE `id_student`='{$id_student}' AND `id_lesson`='{$id_lesson}'";
+	$sql_check = "SELECT `uid` from `user` WHERE `id_teacher` = '{$id_teacher}' AND `uid`='{$id_student}'";
+	$result_check = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
+	if($result_check){
+		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+		if($result){
+			output(array("action"=>"updategrade","status"=>"success"));
+		}
+		else{
+			error("failed");
+		}
+	}
+	else{
+		error("can't updategrade");
+	}
+}
+
+function get_grade($id_student, $id_lesson){
+	$db = dbMysql();
+	$sql = "SELECT `grade` from `grade` WHERE `id_student`='{$id_student}' AND `id_lesson`='{$id_lesson}' LIMIT 1";
+	$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+	if($result){
+		output($result);
+	}
+	else{
+		error("no grade");
+	}
+}
+
+//class
+function query_class(){
+
+}
+
 //admin
 function login(){
 		$request = Slim::getInstance()->request();
