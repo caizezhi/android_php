@@ -144,28 +144,28 @@ function checklesson($id_lesson){
 	}
 }
 
+
 function get_info()
 {
 	$request = Slim::getInstance()->request()->getBody();
 	$request = str_replace('"','"',$request);
-	global $json_string;
-	$json_string = json_decode($request, True);
+	$GLOBALS['json_string'] = json_decode($request, True);
 	output(array("action"=>"get_json"));
 }
 
 
 function get_para(){
-	global $json_string;
+	$GLOBALS['json_string']['Exercises'][0]['Units'][0]['Answer']['Image'][0];
 	$request = Slim::getInstance()->request();
 	$is_voice = trim($request->post('is_voice'));
 	$para1 = trim($request->post('para1'));
 	$para2 = trim($request->post('para2'));
 	$para3 = trim($request->post('para3'));
 	if($is_voice){
-		echo $json_string['Exercises'][$para1]['Units'][$para2]['Voice'][$para3];
+		echo $GLOBALS['json_string']['Exercises'][$para1]['Units'][$para2]['Voice'][$para3];
 	}
 	else{
-		echo $json_string['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3];
+		echo $GLOBALS['json_string']['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3];
 	}
 }
 //grade
