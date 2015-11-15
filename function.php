@@ -229,10 +229,10 @@ function downloadPic(){
 
 }
 
-function downloadPic_test(){
-	$userId = $_GET['userId'];
-	$lessonName = $_GET['lessonName'];
-	$is_public = $_GET['is_public'];
+function downloadPic_test($userId,$lessonName,$is_public){
+	$userId = trim($userId);
+	$lessonName = trim($lessonName);
+	$is_public = trim($is_public);
 	if(!isset($lessonName) || !isset($is_public)){
 		error("invalid Request");
 	}
