@@ -162,11 +162,8 @@ function uploadPic(){
 		);
 		echo json_encode ( $array );
 	}
-}
-
-function insert_url_pic(){
 	$request = Slim::getInstance()->request();
-	$url = "./upload/" . $_FILES ['file'] ['name'];
+	$url = "./upload/" . basename ($_FILES ['file'] ['name']);
 	$lessonName = trim($request->post('lessonName'));
 	$domainID = trim($request->post('domainId'));
 	$subDomainID = trim($request->post('subDomainID'));
@@ -180,7 +177,12 @@ function insert_url_pic(){
 	$optionIndex = trim($request->post('optionIndex'));
 	$responseIndex = trim($request->post('responseIndex'));
 	$interIndex = trim($request->post('interIndex'));
-	$name = $_FILES['file']['name'];
+	$name = basename($_FILES['file']['name']);
+	insert_url_pic($url,$lessonName,$domainID,$subDomainID,$level,$exerciseIndex,$exerciseType,$exerciseName,$unitIndex,$schoolId,$userId,$optionIndex,$responseIndex,$interIndex,$name);
+}
+
+function insert_url_pic($url,$lessonName,$domainID,$subDomainID,$level,$exerciseIndex,$exerciseType,$exerciseName,$unitIndex,$schoolId,$userId,$optionIndex,$responseIndex,$interIndex,$name)
+{
 	$db = dbMysql();
 	$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`responseIndex`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$responseIndex}','{$interIndex}','{$url}')";
 	$is_insert  = $db->query($sql);
