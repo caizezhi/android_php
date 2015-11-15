@@ -180,17 +180,53 @@ function uploadPic(){
 		error(array("action"=>"upload", "status"=>"failed"));
 	}
 }
-function get_uid()
-{
-	$name = $_POST['name'];
-	$db = dbMysql();
-	$sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
-	$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
-	if ($result) {
-		output(array("uid" => $result[0]['uid']));
-	} else {
-		output(array("action" => "get_id", "status" => "failed"));
+
+function downloadPic(){
+	$request = Slim::getInstance()->request();
+	$userId = trim($request->post('userId'));
+	$lessonName = trim($request->post('lessonName'));
+	$is_public = trim($request->post('is_public'));
+	if(!is_numeric($userId) || !is_numeric($lessonName) || !is_numeric($is_public)){
+		error("invalid Request");
 	}
+	else{
+		$db = dbMysql();
+		if($is_public){
+			$get_lesson_id = "SELECT `uid` FROM `public_lesson` WHERE `lesson` = '{$lessonName}' LIMIT 1";
+			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+			$lessonId = $id_lesson[0]['uid'];
+			$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `lessonName` = '{$lessonName}'";
+			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+			if($result) {
+				$urls = array();
+				for($i = 0;$i<count($result);$i++){
+					$urls[$i] = $result[$i]['url'];
+				}
+				output($urls);
+			}
+			else{
+				error(array("action"=>"get url","status"=>"failed"));
+			}
+		}
+		else{
+			$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `user_id` = '{$userId}' AND `lessonName` = '{$lessonName}' LIMIT 1";
+			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+			$lessonId = $id_lesson[0]['uid'];
+			$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
+			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+			if($result){
+				$urls = array();
+				for($i = 0;$i < count($result); $i++){
+					$urls[$i] = $result[$i]['url'];
+				}
+				output($urls);
+			}
+			else{
+				error(array("action"=>"get url", "status"=>"failed"));
+			}
+		}
+	}
+
 }
 
 function get_info()
