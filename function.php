@@ -156,10 +156,10 @@ function get_info()
 	$request = str_replace('"','"',$request);
 	$json_string = json_decode($request, True);
 	if($is_voice){
-		echo $json_string['Exercises'][$para1]['Units'][$para2]['Voice'][$para3];
+		output(array("url"=>$json_string['Exercises'][$para1]['Units'][$para2]['Voice'][$para3]));
 	}
 	else{
-		echo $json_string['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3];
+		output(array("url"=>$json_string['Exercises'][$para1]['Units'][$para2]['Answer']['Image'][$para3]));
 }
 }
 
