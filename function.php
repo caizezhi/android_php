@@ -163,7 +163,7 @@ function uploadPic(){
 		echo json_encode ( $array );
 	}
 
-	$name = $_POST['name'];
+	$name = $_FILES['uploadfile']['name'];
 	$url = "./upload/".$name;
 	$lessonName = $_POST['lessonName'];
 	$domainID = $_POST['domainId'];
@@ -178,8 +178,6 @@ function uploadPic(){
 	$optionIndex = $_POST['optionIndex'];
 	$resourceType = $_POST['resourceType'];
 	$interIndex = $_POST['interIndex'];
-
-
 
 	$db = dbMysql();
 	$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`responseIndex`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}')";
