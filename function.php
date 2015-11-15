@@ -81,11 +81,6 @@ function get_lesson_file($lesson, $uid, $is_public){
 		}	}
 	}
 
-function get_url($uid){
-	$db = dbMysql();
-	$sql = "SELECT ";
-}
-
 function createLesson(){
 	$request = Slim::getInstance()->request();
 	$lesson = trim($request->post('lesson'));
