@@ -148,15 +148,15 @@ function checklesson($id_lesson){
 
 function uploadPic(){
 	$base_path = "./upload/"; // 接收文件目录
-	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
-	if (move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path )) {
+	$target_path = $base_path . basename ( $_FILES ['file'] ['name'] );
+	if (move_uploaded_file ( $_FILES ['file'] ['tmp_name'], $target_path )) {
 		$array = array (
 			"status" => "success",
-			"message" => $_FILES ['uploadfile'] ['name']
+			"message" => $_FILES ['file'] ['name']
 		);
 		echo json_encode ( $array );
 		$request = Slim::getInstance()->request();
-		$url = "./upload/" . $_FILES ['uploadfile'] ['name'];
+		$url = "./upload/" . $_FILES ['file'] ['name'];
 		$lessonName = trim($request->post('lessonName'));
 		$domainID = trim($request->post('domainId'));
 		$subDomainID = trim($request->post('subDomainID'));
@@ -170,7 +170,7 @@ function uploadPic(){
 		$optionIndex = trim($request->post('optionIndex'));
 		$responseIndex = trim($request->post('responseIndex'));
 		$interIndex = trim($request->post('interIndex'));
-		$name = $_FILES['uploadfile']['name'];
+		$name = $_FILES['file']['name'];
 		$db = dbMysql();
 		$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`responseIndex`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$responseIndex}','{$interIndex}','{$url}')";
 		$is_insert  = $db->query($sql);
@@ -181,7 +181,7 @@ function uploadPic(){
 				output(array("uid"=>$result[0]));
 			}
 			else{
-				ouput(array("action"=>"get_id","status"=>"failed"));
+				output(array("action"=>"get_id","status"=>"failed"));
 			}
 		}
 		else{
@@ -190,7 +190,7 @@ function uploadPic(){
 	} else {
 		$array = array (
 			"status" => "failed",
-			"message" => "There was an error uploading the file, please try again!" . $_FILES ['uploadfile'] ['error']
+			"message" => "There was an error uploading the file, please try again!" . $_FILES ['file'] ['error']
 		);
 		echo json_encode ( $array );
 	}
