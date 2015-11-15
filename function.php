@@ -196,7 +196,18 @@ function uploadPic(){
 		output(array("action"=>"insert","status"=>"failed"));
 	}
 }
-
+function get_uid()
+{
+	$name = $_POST['name'];
+	$db = dbMysql();
+	$sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
+	$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+	if ($result) {
+		output(array("uid" => $result[0]));
+	} else {
+		output(array("action" => "get_id", "status" => "failed"));
+	}
+}
 
 function get_info()
 {
