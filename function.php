@@ -200,7 +200,7 @@ function downloadPic(){
 			if($result) {
 				$urls = array();
 				for($i = 0;$i<count($result);$i++){
-					$urls[$i] = $result[$i]['url'];
+					$urls[$i] = array("url"=>$result[$i]['url']);
 				}
 				output($urls);
 			}
