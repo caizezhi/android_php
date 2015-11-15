@@ -49,15 +49,12 @@ function get_lesson_file($lesson, $uid, $is_public){
 		if(!is_numeric($lesson)||!is_numeric($uid)){
 			error("invalid request");
 		}
-		$sql = "SELECT `info` FROM `public_lesson` WHERE `lesson`={$lesson}";
+		$sql = "SELECT `uid` FROM `public_lesson` WHERE `lesson`={$lesson}";
 		$db = dbMysql();
 		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-		$info = array();
 		if($result){
-			for($i = 0; $i < count($result); $i++){
-				$info[$i]=$result[$i];
-			}
-			output($info);
+			$info = $result[0];
+			get_url($info);
 		}
 		else{
 			error("invalid request");
@@ -83,6 +80,11 @@ function get_lesson_file($lesson, $uid, $is_public){
 			error("invalid request");
 		}	}
 	}
+
+function get_url($uid){
+	$db = dbMysql();
+	$sql = "SELECT ";
+}
 
 function createLesson(){
 	$request = Slim::getInstance()->request();
@@ -149,17 +151,53 @@ function uploadPic(){
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
 	if (move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path )) {
 		$array = array (
-			"code" => "1",
+			"status" => "success",
 			"message" => $_FILES ['uploadfile'] ['name']
 		);
 		echo json_encode ( $array );
+		$request = Slim::getInstance()->request();
+		$url = "./upload/" . $_FILES['uploadfile']['name'];
+		$lessonName = trim($request->post('lessonName'));
+		$domainID = trim($request->post('domainId'));
+		$subDomainID = trim($request->post('subDomainID'));
+		$level= trim($request->post('level'));
+		$exerciseIndex = trim($request->post('exerciseIndex'));
+		$exerciseName = trim($request->post('exerciseName'));
+		$exerciseType = trim($request->post('exerciseType'));
+		$unitIndex = trim($request->post('unitIndex'));
+		$schoolId = trim($request->post('schoolID'));
+		$userId = trim($request->post('userID'));
+		$optionIndex = trim($request->post('optionIndex'));
+		$responseIndex = trim($request->post('responseIndex'));
+		$interIndex = trim($request->post('interIndex'));
+		$name = $_FILES['uploadfile']['name'];
+		$db = dbMysql();
+		$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`responseIndex`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$responseIndex}','{$interIndex}','{$url}')";
+		$is_insert  = $db->query($sql);
+		if($is_insert){
+			$sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
+			$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+			if($result){
+				output(array("uid"=>$result[0]));
+			}
+			else{
+				ouput(array("action"=>"get_id","status"=>"failed"));
+			}
+		}
+		else{
+			output(array("action"=>"insert","status"=>"failed"));
+		}
 	} else {
 		$array = array (
-			"code" => "0",
+			"status" => "failed",
 			"message" => "There was an error uploading the file, please try again!" . $_FILES ['uploadfile'] ['error']
 		);
 		echo json_encode ( $array );
 	}
+}
+
+function insert_url_pic(){
+
 }
 
 function get_info()
