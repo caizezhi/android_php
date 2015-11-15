@@ -229,11 +229,7 @@ function downloadPic(){
 
 }
 
-function downloadPic_test(){
-	$request = Slim::getInstance()->request();
-	$userId = trim($request->get('userId'));
-	$lessonName = trim($request->get('lessonName'));
-	$is_public = trim($request->get('is_public'));
+function downloadPic_test($userId, $lessonName, $is_public){
 	if(!isset($lessonName) || !isset($is_public)){
 		error("invalid Request");
 	}
