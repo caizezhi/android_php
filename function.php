@@ -182,7 +182,7 @@ function uploadPic(){
 	}
 }
 	else{
-		error(array("status"=>"failed"));
+		error(array("action"=>"upload", "status"=>"failed"));
 	}
 }
 function get_uid()
