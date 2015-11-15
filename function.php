@@ -149,7 +149,7 @@ function checklesson($id_lesson){
 function uploadPic(){
 	$base_path = "./upload/"; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
-	if (move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path )) {
+	/*if ( )) {
 		$array = array (
 			"status" => "success",
 			"message" => $_FILES ['uploadfile'] ['name']
@@ -161,10 +161,10 @@ function uploadPic(){
 			"message" => "There was an error uploading the file, please try again!" . $_FILES ['uploadfile'] ['error']
 		);
 		echo json_encode ( $array );
-	}
-
+	}*/
+	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
 	$name = $_FILES['uploadfile']['name'];
-	$url = "./upload/".$name;
+	$url = "./upload/" . $name;
 	$lessonName = $_POST['lessonName'];
 	$domainID = $_POST['domainId'];
 	$subDomainID = $_POST['subDomainId'];
@@ -181,19 +181,21 @@ function uploadPic(){
 
 	$db = dbMysql();
 	$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`responseIndex`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}')";
-	$is_insert  = $db->query($sql);
-	if($is_insert){
+	$is_insert = $db->query($sql);
+	if ($is_insert) {
 		$sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
 		$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
-		if($result){
-			output(array("uid"=>$result[0]['uid']));
+		if ($result) {
+			output(array("uid" => $result[0]['uid']));
+		} else {
+			output(array("action" => "get_id", "status" => "failed"));
 		}
-		else{
-			output(array("action"=>"get_id","status"=>"failed"));
-		}
+	} else {
+		output(array("action" => "insert", "status" => "failed"));
 	}
+}
 	else{
-		output(array("action"=>"insert","status"=>"failed"));
+		error(array("status"=>"failed"));
 	}
 }
 function get_uid()
