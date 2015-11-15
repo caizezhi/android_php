@@ -186,7 +186,7 @@ function downloadPic(){
 	$userId = trim($request->post('userId'));
 	$lessonName = trim($request->post('lessonName'));
 	$is_public = trim($request->post('is_public'));
-	if(!is_numeric($userId) || !is_numeric($lessonName) || !is_numeric($is_public)){
+	if(!is_numeric($lessonName) || !is_numeric($is_public)){
 		error("invalid Request");
 	}
 	else{
