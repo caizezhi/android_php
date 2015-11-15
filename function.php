@@ -156,7 +156,7 @@ function uploadPic(){
 		);
 		echo json_encode ( $array );
 		$request = Slim::getInstance()->request();
-		$url = "./upload/" . $_FILES['uploadfile']['name'];
+		$url = "./upload/" . $_FILES ['uploadfile'] ['name'];
 		$lessonName = trim($request->post('lessonName'));
 		$domainID = trim($request->post('domainId'));
 		$subDomainID = trim($request->post('subDomainID'));
