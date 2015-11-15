@@ -149,19 +149,6 @@ function checklesson($id_lesson){
 function uploadPic(){
 	$base_path = "./upload/"; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
-	/*if ( )) {
-		$array = array (
-			"status" => "success",
-			"message" => $_FILES ['uploadfile'] ['name']
-		);
-		echo json_encode ( $array );
-	} else {
-		$array = array (
-			"status" => "failed",
-			"message" => "There was an error uploading the file, please try again!" . $_FILES ['uploadfile'] ['error']
-		);
-		echo json_encode ( $array );
-	}*/
 	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
 	$name = $_FILES['uploadfile']['name'];
 	$url = "./upload/" . $name;
