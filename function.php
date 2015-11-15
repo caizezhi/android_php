@@ -146,7 +146,7 @@ function uploadPic(){
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
 	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
 	$name = $_FILES['uploadfile']['name'];
-	$url = "./upload/" . $name;
+	$url = "http://101.200.177.122/Android_HT/upload/" . $name;
 	$lessonName = $_POST['lessonName'];
 	$domainID = $_POST['domainId'];
 	$subDomainID = $_POST['subDomainId'];
