@@ -4,7 +4,7 @@ require 'function.php';
 $app = new Slim();
 //index
 $app->get("/:lesson/:teacher/:user/:is_puiblic","lessons");
-$app->post("/uploadPicture","uploadPic");
+$app->post("/uploadPic","uploadPic");
 $app->post("/uploadVoi","uploadVoi");
 $app->post("/createlesson","createLesson");
 $app->post("/homework","homework");
