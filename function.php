@@ -230,7 +230,7 @@ function downloadPic(){
 }
 
 function downloadPic_test(){
-	$userId = $_GET['uesrId'];
+	$userId = $_GET['userId'];
 	$lessonName = $_GET['lessonName'];
 	$is_public = $_GET['is_public'];
 	if(!isset($lessonName) || !isset($is_public)){
