@@ -177,7 +177,7 @@ function uploadPic(){
 	}
 }
 	else{
-		error(array("action"=>"upload", "status"=>"failed"));
+		output(array("action"=>"upload", "status"=>"failed"));
 	}
 }
 
