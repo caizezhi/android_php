@@ -189,48 +189,45 @@ function downloadPic(){
 	if(!isset($lessonName) || !isset($is_public)){
 		error("invalid Request");
 	}
-	else{
+	else {
 		$db = dbMysql();
-		if($is_public){
+		if ($is_public) {
 			$get_lesson_id = "SELECT `uid` FROM `public_lesson` WHERE `lesson` = '{$lessonName}' LIMIT 1";
 			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
 			$lessonId = $id_lesson[0]['uid'];
 			$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `lessonName` = '{$lessonName}'";
 			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			if($result) {
+			if ($result) {
 				$urls = array();
-				for($i = 0;$i<count($result);$i++){
-					$urls[$i] = array("url"=>$result[$i]['url']);
+				for ($i = 0; $i < count($result); $i++) {
+					$urls[$i] = array("url" => $result[$i]['url']);
 				}
 				output($urls);
+			} else {
+				error(array("action" => "get url", "status" => "failed"));
 			}
-			else{
-				error(array("action"=>"get url","status"=>"failed"));
-			}
-		}
-		else{
+		} else {
 			$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `user_id` = '{$userId}' AND `lessonName` = '{$lessonName}' LIMIT 1";
 			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
-			if($id_lesson){
+			if ($id_lesson) {
 				$lessonId = $id_lesson[0]['uid'];
 				$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
 				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-				if($result){
+				if ($result) {
 					$urls = array();
-					for($i = 0;$i < count($result); $i++){
-						$urls[$i] = array("url"=>$result[$i]['url']);
+					for ($i = 0; $i < count($result); $i++) {
+						$urls[$i] = array("url" => $result[$i]['url']);
 					}
 					output($urls);
+				} else {
+					error("no lesson");
 				}
-			else{
-				error("no lesson");
 			}
 			else{
-				error(array("action"=>"get url", "status"=>"failed"));
+					error(array("action" => "get url", "status" => "failed"));
+				}
 			}
 		}
-	}
-
 }
 
 function downloadPic_test($userId,$lessonName,$is_public){
