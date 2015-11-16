@@ -196,12 +196,12 @@ function downloadPic(){
 			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
 			if($id_lesson) {
 				$lessonId = $id_lesson[0]['uid'];
-				$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `lessonName` = '{$lessonName}'";
+				$sql = "SELECT * FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `lessonName` = '{$lessonName}'";
 				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 				if ($result) {
 					$urls = array();
 					for ($i = 0; $i < count($result); $i++) {
-						$urls[$i] = array("url" => $result[$i]['url'],"lessonName"=>$lessonName);
+						$urls[$i] = array("url" => $result[$i]['url'],"lessonName"=>$lessonName,"domainId"=>$result[$i]['domainId'],"subDomainId"=>"$result[$i]['subDomainId]","exerciseName"=>$result[$i]['exerciseName'],"exerciseIndex"=>$result[$i]['exerciseIndex'],"exerciseType"=>$result[$i]['exerciseType'],"unitIndex"=>$result[$i]['unitIndex'],"optionIndex"=>$result[$i]['optionIndex'],"resourceType"=>$result[$i]['responseIndex'],"interIndex"=>$result[$i]['interIndex'],"level"=>$result[$i]['level'],"lessonId"=>$result[$i]['lessonId']);
 					}
 					output($urls);
 				} else {
@@ -216,7 +216,7 @@ function downloadPic(){
 			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
 			if ($id_lesson) {
 				$lessonId = $id_lesson[0]['uid'];
-				$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
+				$sql = "SELECT * FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
 				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 				if ($result) {
 					$urls = array();
