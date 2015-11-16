@@ -162,7 +162,7 @@ function uploadPic(){
 	$interIndex = $_POST['interIndex'];
 
 	$db = dbMysql();
-	$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`responseIndex`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}')";
+	$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}')";
 	$is_insert = $db->query($sql);
 	if ($is_insert) {
 		$sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
@@ -222,7 +222,7 @@ function downloadPic(){
 				if ($result) {
 					$urls = array();
 					for ($i = 0; $i < count($result); $i++) {
-						$urls[$i] = array("url" => $result[$i]['url'],"lessonName"=>$lessonName);
+						$urls[$i] = $result[$i];
 					}
 					output($urls);
 				} else {
