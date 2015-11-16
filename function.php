@@ -201,9 +201,9 @@ function downloadPic(){
 				if ($result) {
 					$urls = array();
 					for ($i = 0; $i < count($result); $i++) {
-						$urls[$i] = array("url" => $result[$i]['url'],"lessonName"=>$lessonName,"domainId"=>$result[$i]['domainID'],"subDomainId"=>"$result[$i]['subDomainId]","exerciseName"=>$result[$i]['exerciseName'],"exerciseIndex"=>$result[$i]['exerciseIndex'],"exerciseType"=>$result[$i]['exerciseType'],"unitIndex"=>$result[$i]['unitIndex'],"optionIndex"=>$result[$i]['optionIndex'],"resourceType"=>$result[$i]['responseIndex'],"interIndex"=>$result[$i]['interIndex'],"level"=>$result[$i]['level'],"lessonId"=>$result[$i]['lessonId']);
+						outuput(array("url" => $result[$i]['url'],"lessonName"=>$lessonName,"domainId"=>$result[$i]['domainID'],"subDomainId"=>"$result[$i]['subDomainId]","exerciseName"=>$result[$i]['exerciseName'],"exerciseIndex"=>$result[$i]['exerciseIndex'],"exerciseType"=>$result[$i]['exerciseType'],"unitIndex"=>$result[$i]['unitIndex'],"optionIndex"=>$result[$i]['optionIndex'],"resourceType"=>$result[$i]['responseIndex'],"interIndex"=>$result[$i]['interIndex'],"level"=>$result[$i]['level'],"lessonId"=>$result[$i]['lessonId']));
 					}
-					output($urls);
+				//	output($urls);
 				} else {
 					error(array("action" => "get url", "status" => "failed"));
 				}
