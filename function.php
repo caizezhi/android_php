@@ -211,15 +211,19 @@ function downloadPic(){
 		else{
 			$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `user_id` = '{$userId}' AND `lessonName` = '{$lessonName}' LIMIT 1";
 			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
-			$lessonId = $id_lesson[0]['uid'];
-			$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
-			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			if($result){
-				$urls = array();
-				for($i = 0;$i < count($result); $i++){
-					$urls[$i] = array("url"=>$result[$i]['url']);
+			if($id_lesson){
+				$lessonId = $id_lesson[0]['uid'];
+				$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
+				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+				if($result){
+					$urls = array();
+					for($i = 0;$i < count($result); $i++){
+						$urls[$i] = array("url"=>$result[$i]['url']);
+					}
+					output($urls);
 				}
-				output($urls);
+			else{
+				error("no lesson");
 			}
 			else{
 				error(array("action"=>"get url", "status"=>"failed"));
