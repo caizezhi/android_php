@@ -259,7 +259,7 @@ function downloadPic(){
 				error("no lesson");
 			}
 		} else {
-			$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `id_teacher` = '{$userId}' AND `lessonName` = '{$lessonName}' LIMIT 1";
+			$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `id_teacher` = '{$userId}' AND `lesson` = '{$lessonName}' LIMIT 1";
 			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
 			if ($id_lesson) {
 				$lessonId = $id_lesson[0]['uid'];
