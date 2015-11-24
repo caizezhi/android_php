@@ -24,24 +24,52 @@ function output($arr){
 /*Class_*/
 
 //$lesson 课程, $teacher 老师id $user 用户名
-function lessons($lesson, $teacher, $user, $is_public){
-	$is_login = check_login();
-	if(!$is_login){
-		error("Please Login");
-	}
-	else{
-		$sql = "SELECT uid from `teacher` WHERE `name`={$teacher} AND `user`={$user}";
-		$db = dbMysql();
-		$uid = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-		if($uid){
-			get_lesson_file($lesson, $uid[0], $is_public);
-				}
-		else{
-			error("You are not teacher");
-		}
-		}
+function lessons($lesson, $teacher, $user, $is_public, $type){
+    $is_login = check_login();
+    if(!$is_login){
+        error("Please Login");
+    }
+    else {
+        $sql = "SELECT `uid` FROM `teacher` WHERE `nickname` = '{$teacher}' AND `teacher` = '{$user}' LIMIT 1";
+        $db = dbMysql();
+        $uid = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        if ($uid) {
+            get_lesson_info($lesson, $uid[0]['uid'], $is_public, $type);
+        }
+        else{
+            error("No Such Teacher");
+        }
+    }
 }
 
+function get_lesson_info($lesson, $uid, $is_public, $type){
+    $lesson = trim($lesson);
+    $uid = trim($uid);
+    $is_public = trim($is_public);
+    $type = trim($type);
+    if($is_public){
+        $sql = "SELECT `info` FROM `public_lesson` WHERE `type` = '{$type}' AND `lesson` = '{$lesson}'";
+        $db = dbMysql();
+        $result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        if($result){
+            output($result);
+        }
+        else{
+            error("No public lesson");
+        }
+    }
+    else{
+        $sql = "SELECT `info` FROM `private_lesson` WHERE `id_teacher` = '{$uid}' AND `lesson` = '{$lesson}'";
+        $db = dbMysql();
+        $result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        if($result){
+            output($result);
+        }
+        else{
+            error("No private lesson");
+        }
+    }
+}
 
 function createLesson(){
 	$request = Slim::getInstance()->request();
@@ -103,41 +131,97 @@ function checklesson($id_lesson){
 	}
 }
 
+function uploadVoi()
+{
+    $userId = $_POST['userId'];
+    $base_path = "./upload" . $userId;
+    $target_path = $base_path . basename($_FILES['uploadfile']['name']);
+    if (move_uploaded_file($_FILES ['uploadfile'] ['tmp_name'], $target_path)) {
+        $name = $_FILES['uploadfile']['name'];
+        $url = "http://101.200.177.122/Android_HT/upload/" . $userId . $name;
+        $lessonName = $_POST['lessonName'];
+        $domainID = $_POST['domainId'];
+        $subDomainID = $_POST['subDomainId'];
+        $level = $_POST['level'];
+        $exerciseIndex = $_POST['exerciseIndex'];
+        $exerciseName = $_POST['exerciseName'];
+        $exerciseType = $_POST['exerciseType'];
+        $unitIndex = $_POST['unitIndex'];
+        $schoolId = $_POST['schoolId'];
+        $optionIndex = $_POST['optionIndex'];
+        $resourceType = $_POST['resourceType'];
+        $interIndex = $_POST['interIndex'];
+        $get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `lesson` = '{$lessonName}' AND `id_teacher` = '{$userId}'";
+        $db = dbMysql();
+        $get_id_result = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+        if($get_id_result){
+            $lesson_id = $get_lesson_id[0]['uid'];
+            $sql = "INSERT INTO `voice` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`,`lessonId`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}','{$lesson_id}')";
+            $is_insert = $db->query($sql);
+            if ($is_insert) {
+                $sql_get_id = "SELECT `uid` FROM `voice` WHERE `name` = '{$name}' LIMIT 1";
+                $result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+                if ($result) {
+                    output(array("uid" => $result[0]['uid']));
+                } else {
+                    output(array("action" => "get_id", "status" => "failed"));
+                }
+            } else {
+                output(array("action" => "insert", "status" => "failed"));
+            }
+        }
+        else {
+            error("No such lessosn");
+        }
+    }
+    else{
+        output(array("action"=>"upload", "status"=>"failed"));
+    }
+
+}
+
 function uploadPic(){
 	$userId = $_POST['userId'];
 	$base_path = "./upload/" . $userId; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
 	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
-	$name = $_FILES['uploadfile']['name'];
-	$url = "http://101.200.177.122/Android_HT/upload/" . $userId . $name;
-	$lessonName = $_POST['lessonName'];
-	$domainID = $_POST['domainId'];
-	$subDomainID = $_POST['subDomainId'];
-	$level = $_POST['level'];
-	$exerciseIndex = $_POST['exerciseIndex'];
-	$exerciseName = $_POST['exerciseName'];
-	$exerciseType = $_POST['exerciseType'];
-	$unitIndex = $_POST['unitIndex'];
-	$schoolId = $_POST['schoolId'];
-	$optionIndex = $_POST['optionIndex'];
-	$resourceType = $_POST['resourceType'];
-	$interIndex = $_POST['interIndex'];
-
-	$db = dbMysql();
-	$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}')";
-	$is_insert = $db->query($sql);
-	if ($is_insert) {
-		$sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
-		$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
-		if ($result) {
-			output(array("uid" => $result[0]['uid']));
-		} else {
-			output(array("action" => "get_id", "status" => "failed"));
-		}
-	} else {
-		output(array("action" => "insert", "status" => "failed"));
-	}
-}
+    	$name = $_FILES['uploadfile']['name'];
+    	$url = "http://101.200.177.122/Android_HT/upload/" . $userId . $name;
+    	$lessonName = $_POST['lessonName'];
+    	$domainID = $_POST['domainId'];
+    	$subDomainID = $_POST['subDomainId'];
+    	$level = $_POST['level'];
+	    $exerciseIndex = $_POST['exerciseIndex'];
+    	$exerciseName = $_POST['exerciseName'];
+	    $exerciseType = $_POST['exerciseType'];
+	    $unitIndex = $_POST['unitIndex'];
+	    $schoolId = $_POST['schoolId'];
+	    $optionIndex = $_POST['optionIndex'];
+	    $resourceType = $_POST['resourceType'];
+	    $interIndex = $_POST['interIndex'];
+        $get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `lesson` = '{$lessonName}' AND `id_teacher` = '{$userId}'";
+	    $db = dbMysql();
+        $get_id_result = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+        if($get_id_result){
+            $lesson_id = $get_lesson_id[0]['uid'];
+	    $sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`,`lessonId`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}','{$lesson_id}')";
+	    $is_insert = $db->query($sql);
+	    if ($is_insert) {
+		    $sql_get_id = "SELECT `uid` FROM `picture` WHERE `name` = '{$name}' LIMIT 1";
+		    $result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+		    if ($result) {
+			    output(array("uid" => $result[0]['uid']));
+		    } else {
+			    output(array("action" => "get_id", "status" => "failed"));
+		    }
+	    } else {
+		    output(array("action" => "insert", "status" => "failed"));
+	    }
+        }
+        else {
+            error("No such lessosn");
+        }
+    }
 	else{
 		output(array("action"=>"upload", "status"=>"failed"));
 	}
@@ -198,51 +282,59 @@ function downloadPic(){
 		}
 }
 
-function downloadPic_test($userId,$lessonName,$is_public){
-	$userId = trim($userId);
-	$lessonName = trim($lessonName);
-	$is_public = trim($is_public);
-	if(!isset($lessonName) || !isset($is_public)){
-		error("invalid Request");
-	}
-	else{
-		$db = dbMysql();
-		if($is_public){
-			$get_lesson_id = "SELECT `uid` FROM `public_lesson` WHERE `lesson` = '{$lessonName}' LIMIT 1";
-			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
-			$lessonId = $id_lesson[0]['uid'];
-			$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `lessonName` = '{$lessonName}'";
-			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			if($result) {
-				$urls = array();
-				for($i = 0;$i<count($result);$i++){
-					$urls[$i] = array("url"=>$result[$i]['url']);
-				}
-				output($urls);
-			}
-			else{
-				error(array("action"=>"get url","status"=>"failed"));
-			}
-		}
-		else{
-			$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `user_id` = '{$userId}' AND `lessonName` = '{$lessonName}' LIMIT 1";
-			$id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
-			$lessonId = $id_lesson[0]['uid'];
-			$sql = "SELECT `url` FROM `picture` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
-			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			if($result){
-				$urls = array();
-				for($i = 0;$i < count($result); $i++){
-					$urls[$i] = array("url"=>$result[$i]['url']);
-				}
-				output($urls);
-			}
-			else{
-				error(array("action"=>"get url", "status"=>"failed"));
-			}
-		}
-	}
-
+function downloadVoi(){
+    $request = Slim::getInstance()->request();
+    $userId = trim($request->post('userId'));
+    $lessonName = trim($request->post('lessonName'));
+    $is_public = trim($request->post('is_public'));
+    if(!isset($lessonName) || !isset($is_public)){
+        error("invalid Request");
+    }
+    else {
+        $db = dbMysql();
+        if ($is_public) {
+            $get_lesson_id = "SELECT `uid` FROM `public_lesson` WHERE `lesson` = '{$lessonName}' LIMIT 1";
+            $id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+            if($id_lesson) {
+                $lessonId = $id_lesson[0]['uid'];
+                $sql = "SELECT * FROM `voice` WHERE `lessonId` = '{$lessonId}' AND `lessonName` = '{$lessonName}'";
+                $result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                if ($result) {
+                    $urls = array();
+                    for ($i = 0; $i < count($result); $i++) {
+                        //$urls[$i] = array("url" => $result[$i]['url'],"lessonName"=>$lessonName,"domainId"=>$result[$i]['domainID'],"subDomainId"=>"$result[$i]['subDomainId]","exerciseName"=>$result[$i]['exerciseName'],"exerciseIndex"=>$result[$i]['exerciseIndex'],"exerciseType"=>$result[$i]['exerciseType'],"unitIndex"=>$result[$i]['unitIndex'],"optionIndex"=>$result[$i]['optionIndex'],"resourceType"=>$result[$i]['responseIndex'],"interIndex"=>$result[$i]['interIndex'],"level"=>$result[$i]['level'],"lessonId"=>$result[$i]['lessonId']);
+                        $urls[$i]=$result[$i];
+                    }
+                    output($urls);
+                } else {
+                    error(array("action" => "get url", "status" => "failed"));
+                }
+            }
+            else{
+                error("no lesson");
+            }
+        } else {
+            $get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `user_id` = '{$userId}' AND `lessonName` = '{$lessonName}' LIMIT 1";
+            $id_lesson = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+            if ($id_lesson) {
+                $lessonId = $id_lesson[0]['uid'];
+                $sql = "SELECT * FROM `voice` WHERE `lessonId` = '{$lessonId}' AND `userId` = '{$userId}'";
+                $result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                if ($result) {
+                    $urls = array();
+                    for ($i = 0; $i < count($result); $i++) {
+                        $urls[$i] = $result[$i];
+                    }
+                    output($urls);
+                } else {
+                    error("no lesson");
+                }
+            }
+            else{
+                error(array("action" => "get url", "status" => "failed"));
+            }
+        }
+    }
 }
 
 function get_info()
@@ -403,51 +495,47 @@ function get_id_school($school){
 	}
 }
 
-function register(){
-	$request = Slim::getInstance()->request();
-	$user = trim($request->post('user'));
-	$pwd = trim($request->post('pwd'));
-	$pwd = md5(md5($pwd));
-	$school = trim($request->post('school'));
-	$id_school = get_id_school($school);
-	$nickname = trim($request->post('nickname'));
-	$is_teacher = trim($request->post('is_teacher'));
-	$db = dbMysql();
-	if(!$is_teacher){
-		$sql_check = "SELECT `name` FROM `user` WHERE `name`='{$user}'";
-		$result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
-		if($result){
-			error("already registered");
-		}
-		else{
-			$teacher = trim($request->post('teacher'));
-			$id_teacher = get_id_teacher($teacher, $id_school);
-			$sql_insert = "INSERT INTO `user` (`name`,`pwd`,`nickname`,`school`, `teacher`, `id_teacher`, `id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$teacher}','{$id_teacher}','{$id_school}')";
-			$is_insert = $db->query($sql_insert);
-			if($is_insert){
-				output(array("action"=>"register","status"=>"success"));
-			}
-			else{
-				error("false");
-			}
-		}
-	}
-	else{
-		$sql_check = "SELECT `teacher` FROM `teacher` WHERE `teacher`='{$user}'";
-		$result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
-		if($result){
-			error("already sign in");
-		}
-		else{
-			$sql_insert = "INSERT INTO `teacher` (`teacher`,`pwd`,`nickname`,`school`,`id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$id_school}')";
-			$is_insert = $db->query($sql_insert);
-			if($is_insert){
-				output(array("action"=>"register","status"=>"success"));
-			}
-			else{
-				error("false");
-			}
-		}
-	}
+function register()
+{
+    $request = Slim::getInstance()->request();
+    $user = trim($request->post('user'));
+    $pwd = trim($request->post('pwd'));
+    $pwd = md5(md5($pwd));
+    $school = trim($request->post('school'));
+    $id_school = get_id_school($school);
+    $nickname = trim($request->post('nickname'));
+    $is_teacher = trim($request->post('is_teacher'));
+    $db = dbMysql();
+    if (!$is_teacher) {
+        $sql_check = "SELECT `name` FROM `user` WHERE `name`='{$user}'";
+        $result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
+        if ($result) {
+            error("already registered");
+        } else {
+            $teacher = trim($request->post('teacher'));
+            $id_teacher = get_id_teacher($teacher, $id_school);
+            $sql_insert = "INSERT INTO `user` (`name`,`pwd`,`nickname`,`school`, `teacher`, `id_teacher`, `id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$teacher}','{$id_teacher}','{$id_school}')";
+            $is_insert = $db->query($sql_insert);
+            if ($is_insert) {
+                output(array("action" => "register", "status" => "success"));
+            } else {
+                error("false");
+            }
+        }
+    } else {
+        $sql_check = "SELECT `teacher` FROM `teacher` WHERE `teacher`='{$user}'";
+        $result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
+        if ($result) {
+            error("already sign in");
+        } else {
+            $sql_insert = "INSERT INTO `teacher` (`teacher`,`pwd`,`nickname`,`school`,`id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$id_school}')";
+            $is_insert = $db->query($sql_insert);
+            if ($is_insert) {
+                output(array("action" => "register", "status" => "success"));
+            } else {
+                error("false");
+            }
+        }
+    }
 }
 ?>
