@@ -182,7 +182,7 @@ function uploadVoi()
 
 function uploadPic(){
 	$userId = $_POST['userId'];
-	$base_path = "./upload/" . $userId; // 接收文件目录
+	$base_path = "./upload/" . $userId . "/"; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
 	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
     	$name = $_FILES['uploadfile']['name'];
