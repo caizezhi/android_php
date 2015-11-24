@@ -535,6 +535,12 @@ function register()
             } else {
                 error("false");
             }
+            $sql_get_id = "SELECT `uid` FROM `teacher` WHERE `nickname`='{$nickname}' AND `teacher` = '{$user}'";
+            $get = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+            $uid = $get[0]['uid'];
+            if(!is_dir("upload/".$uid."/")){
+                mkdir("upload/".$uid."/", 0777);
+            }
         }
     }
 }
