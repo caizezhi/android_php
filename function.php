@@ -42,44 +42,6 @@ function lessons($lesson, $teacher, $user, $is_public){
 		}
 }
 
-function get_lesson_file($lesson, $uid, $is_public){
-	if($is_public){
-		$lesson = trim($lesson);
-		$uid = trim($uid);
-		if(!is_numeric($lesson)||!is_numeric($uid)){
-			error("invalid request");
-		}
-		$sql = "SELECT `uid` FROM `public_lesson` WHERE `lesson`={$lesson}";
-		$db = dbMysql();
-		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-		if($result){
-			$info = $result[0];
-			get_url($info);
-		}
-		else{
-			error("invalid request");
-		}
-}
-	else{
-		$lesson = trim($lesson);
-		$uid = trim($uid);
-		if(!is_numeric($lesson)||!is_numeric($uid)){
-			error("invaild request");
-		}
-		$sql = "SELECT `info` FROM `private_lesson` WHERE `id_teacher`={$uid}";
-		$db = dbMysql();
-		$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-		$info = array();
-		if($result){
-			for($i = 0; $i < count($result); $i++){
-				$info[$i]=$result[$i];
-			}
-			output($info);
-		}
-		else{
-			error("invalid request");
-		}	}
-	}
 
 function createLesson(){
 	$request = Slim::getInstance()->request();
@@ -142,11 +104,12 @@ function checklesson($id_lesson){
 }
 
 function uploadPic(){
-	$base_path = "./upload/"; // 接收文件目录
+	$userId = $_POST['userId'];
+	$base_path = "./upload/" . $userId; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
 	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
 	$name = $_FILES['uploadfile']['name'];
-	$url = "http://101.200.177.122/Android_HT/upload/" . $name;
+	$url = "http://101.200.177.122/Android_HT/upload/" . $userId . $name;
 	$lessonName = $_POST['lessonName'];
 	$domainID = $_POST['domainId'];
 	$subDomainID = $_POST['subDomainId'];
@@ -156,7 +119,6 @@ function uploadPic(){
 	$exerciseType = $_POST['exerciseType'];
 	$unitIndex = $_POST['unitIndex'];
 	$schoolId = $_POST['schoolId'];
-	$userId = $_POST['userId'];
 	$optionIndex = $_POST['optionIndex'];
 	$resourceType = $_POST['resourceType'];
 	$interIndex = $_POST['interIndex'];
