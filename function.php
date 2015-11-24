@@ -203,7 +203,7 @@ function uploadPic(){
 	    $db = dbMysql();
         $get_id_result = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
         if($get_id_result){
-            $lesson_id = $get_lesson_id[0]['uid'];
+            $lesson_id = $get_id_result[0]['uid'];
 	    $sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`,`lessonId`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}','{$lesson_id}')";
 	    $is_insert = $db->query($sql);
 	    if ($is_insert) {
