@@ -13,7 +13,6 @@ $app->post("/updategrade","updategrade");
 $app->get("/:id_student/:id_lesson","get_grade");
 $app->post("/test_json","get_info");
 $app->post("/downloadPic","downloadPic");
-$app->get("/:userId/:lessonName/:is_public","downloadPic_test");
 //admin
 $app->post("/admin/login","login");
 $app->post("/admin/register","register");
