@@ -499,51 +499,58 @@ function get_id_school($school){
 
 function register()
 {
-    $request = Slim::getInstance()->request();
-    $user = trim($request->post('user'));
-    $pwd = trim($request->post('pwd'));
-    $pwd = md5(md5($pwd));
-    $school = trim($request->post('school'));
-    $id_school = get_id_school($school);
-    $nickname = trim($request->post('nickname'));
-    $is_teacher = trim($request->post('is_teacher'));
-    $db = dbMysql();
-    if (!$is_teacher) {
-        $sql_check = "SELECT `name` FROM `user` WHERE `name`='{$user}'";
-        $result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
-        if ($result) {
-            error("already registered");
-        } else {
-            $teacher = trim($request->post('teacher'));
-            $id_teacher = get_id_teacher($teacher, $id_school);
-            $sql_insert = "INSERT INTO `user` (`name`,`pwd`,`nickname`,`school`, `teacher`, `id_teacher`, `id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$teacher}','{$id_teacher}','{$id_school}')";
-            $is_insert = $db->query($sql_insert);
-            if ($is_insert) {
-                output(array("action" => "register", "status" => "success"));
-            } else {
-                error("false");
-            }
-        }
-    } else {
-        $sql_check = "SELECT `teacher` FROM `teacher` WHERE `teacher`='{$user}'";
-        $result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
-        if ($result) {
-            error("already sign in");
-        } else {
-            $sql_insert = "INSERT INTO `teacher` (`teacher`,`pwd`,`nickname`,`school`,`id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$id_school}')";
-            $is_insert = $db->query($sql_insert);
-            if ($is_insert) {
-                output(array("action" => "register", "status" => "success"));
-            } else {
-                error("false");
-            }
-            $sql_get_id = "SELECT `uid` FROM `teacher` WHERE `nickname`='{$nickname}' AND `teacher` = '{$user}'";
-            $get = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
-            $uid = $get[0]['uid'];
-            if(!is_dir("upload/".$uid."/")){
-                mkdir("upload/".$uid."/", 0777);
-            }
-        }
-    }
+	$request = Slim::getInstance()->request();
+	$user = trim($request->post('user'));
+	$pwd = trim($request->post('pwd'));
+	$pwd = md5(md5($pwd));
+	$school = trim($request->post('school'));
+	$id_school = get_id_school($school);
+	$nickname = trim($request->post('nickname'));
+	$is_teacher = trim($request->post('is_teacher'));
+	$checkschool = "SELECT `uid` FROM `school` WHERE `school` = '{$school}'";
+	$db = dbMysql();
+	$is_school_exist = $db->query($checkschool)->fetchAll(PDO::FETCH_ASSOC);
+	if($is_school_exist){
+		if (!$is_teacher) {
+			$sql_check = "SELECT `name` FROM `user` WHERE `name`='{$user}'";
+			$result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
+			if ($result) {
+				error("already registered");
+			} else {
+				$teacher = trim($request->post('teacher'));
+				$id_teacher = get_id_teacher($teacher, $id_school);
+				$sql_insert = "INSERT INTO `user` (`name`,`pwd`,`nickname`,`school`, `teacher`, `id_teacher`, `id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$teacher}','{$id_teacher}','{$id_school}')";
+				$is_insert = $db->query($sql_insert);
+				if ($is_insert) {
+					output(array("action" => "register", "status" => "success"));
+				} else {
+					error("false");
+				}
+			}
+		} else {
+			$sql_check = "SELECT `teacher` FROM `teacher` WHERE `teacher`='{$user}'";
+			$result = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
+			if ($result) {
+				error("already sign in");
+			} else {
+				$sql_insert = "INSERT INTO `teacher` (`teacher`,`pwd`,`nickname`,`school`,`id_school`) VALUES('{$user}','{$pwd}','{$nickname}','{$school}','{$id_school}')";
+				$is_insert = $db->query($sql_insert);
+				if ($is_insert) {
+					output(array("action" => "register", "status" => "success"));
+				} else {
+					error("false");
+				}
+				$sql_get_id = "SELECT `uid` FROM `teacher` WHERE `nickname`='{$nickname}' AND `teacher` = '{$user}'";
+				$get = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+				$uid = $get[0]['uid'];
+				if (!is_dir("upload/" . $uid . "/")) {
+					mkdir("upload/" . $uid . "/", 0777);
+				}
+			}
+		}
+	}
+	else{
+		error("No Such School");
+	}
 }
 ?>
