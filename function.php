@@ -345,7 +345,7 @@ function downloadVoi(){
 function md5(){
 	$base_path = "./upload/test/"; // 接收文件目录
 	$target_path = $base_path . $_FILES ['uploadfile'] ['name'];
-	$md5 = md5_file($_FILES['uploadfile']['tmp_name']);
+/*	$md5 = md5_file($_FILES['uploadfile']['tmp_name']);
 	$db = dbMysql();
 	$sql_check = "SELECT `url` FROM `test` WHERE `md5` = '{$md5}'";
 	$is_exist = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
@@ -360,11 +360,11 @@ function md5(){
 			error("error");
 		}
 	}
-	else{
+	else{*/
 		if(move_uploaded_file($_FILES ['uploadfile'] ['tmp_name'], $target_path)){
 			$name = $_FILES['uploadfile']['name'];
 			$url = "http://101.200.177.122/Android_HT/upload/test/" . $name;
-			$sql = "INSERT INTO `test` (`name`,`url`,`md5`) VALUES('{$name}','{$url}','{$md5}')";
+			$sql = "INSERT INTO `test` (`name`,`url`) VALUES('{$name}','{$url}')";
 			$is_insert = $db->query($sql);
 			if($is_insert){
 				output(array("action"=>"success"));
@@ -373,7 +373,7 @@ function md5(){
 				error("error");
 			}
 		}
-	}
+	//}
 }
 
 function get_info()
