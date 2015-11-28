@@ -188,8 +188,6 @@ function uploadPic(){
 	$userId = $_POST['userId'];
 	$base_path = "./upload/" . $userId . "/"; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
-    $original = $_FILES['uploadfile']['tmp_name'];
-    $md5 = md5_file($original);
 	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
     	$name = $_FILES['uploadfile']['name'];
     	$url = "http://101.200.177.122/Android_HT/upload/" . $userId . "/" . $name;
