@@ -363,8 +363,8 @@ function md5(){
 		}
 	}
 	else{
-		if (move_uploaded_file($_FILES ['uploadfile'] ['tmp_name'], $target_path)) {
-			$sql = "INSERT INTO `test`(`name`,`url`,`md5`) VALUES('{$name}','{$url}','{$md5}')";
+		if(move_uploaded_file($_FILES ['uploadfile'] ['tmp_name'], $target_path)){
+			$sql = "INSERT INTO `test` (`name`,`url`,`md5`) VALUES('{$name}','{$url}','{$md5}')";
 			$is_insert = $db->query($sql);
 			if($is_insert){
 				output(array("action"=>"success"));
