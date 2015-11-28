@@ -344,7 +344,7 @@ function downloadVoi(){
 
 function md5(){
 	$base_path = "./upload/test/"; // 接收文件目录
-	$target_path = $base_path . $_FILES ['uploadfile'] ['name'];
+	$target_path = $base_path . basename($_FILES ['uploadfile'] ['name']);
 	$db = dbMysql();
 /*	$md5 = md5_file($_FILES['uploadfile']['tmp_name']);
 	$sql_check = "SELECT `url` FROM `test` WHERE `md5` = '{$md5}'";
