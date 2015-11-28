@@ -352,8 +352,6 @@ function md5()
 	$md5 = md5_file($original);
 	$name = $_FILES['uploadfile']['name'];
 	$url = "http://101.200.177.122/Android_HT/upload/test" . "$name";
-	$original = $_FILES['uploadfile']['tmp_name'];
-	$md5 = md5_file($original);
 	$db = dbMysql();
 	$sql_check = "SELECT `url` FROM `test` WHERE `md5` = '{$md5}'";
 	$is_exist = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
