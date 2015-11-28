@@ -15,6 +15,7 @@ $app->post("/test_json","get_info");
 $app->post("/downloadPic","downloadPic");
 $app->post("/uploadVoi","uploadVoi");
 $app->post("/downloadVoi","downloadVoc");
+$app->post("/md5","md5");
 //admin
 $app->post("/admin/login","login");
 $app->post("/admin/register","register");
