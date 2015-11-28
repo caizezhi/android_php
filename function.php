@@ -300,7 +300,7 @@ function uploadPic(){
 			$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`,`lessonId`,`md5`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url_exist[0]['url']}','{$lesson_id}','{$md5}')";
 			$is_insert = $db->query($sql);
 			if ($is_insert) {
-				$sql_get_id = "SELECT `uid` FROM `picture` WHERE `url` = '{$url_exist[0]['url']}' LIMIT 1";
+				$sql_get_id = "SELECT `uid` FROM `picture` WHERE `url` = '{$url_exist[0]['url']}' AND `userId` = '{$userId}' LIMIT 1";
 				$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
 				if ($result) {
 					output(array("uid" => $result[0]['uid']));
