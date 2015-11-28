@@ -14,7 +14,7 @@ $app->get("/:id_student/:id_lesson","get_grade");
 $app->post("/test_json","get_info");
 $app->post("/downloadPic","downloadPic");
 $app->post("/uploadVoi","uploadVoi");
-$app->post("/downloadVoi","downloadVoc");
+$app->post("/downloadVoi","downloadVoi");
 $app->post("/md5","md5");
 //admin
 $app->post("/admin/login","login");
