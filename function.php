@@ -353,7 +353,7 @@ function md5(){
 	$sql_check = "SELECT `url` FROM `test` WHERE `md5` = '{$md5}'";
 	$is_exist = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
 	if($is_exist){
-		$sql = "INSERT INTO `test`(`name`,`url`,`md5`) VALUES('{$name}',{$is_exist[0]['url']},'{$md5}')";
+		$sql = "INSERT INTO `test`(`name`,`url`,`md5`) VALUES('{$name}','{$is_exist[0]['url']}','{$md5}')";
 		$is_insert = $db->query($sql);
 		if($is_insert){
 			output(array("action"=>"success"));
