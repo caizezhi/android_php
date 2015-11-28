@@ -342,7 +342,7 @@ function downloadVoi(){
 }
 //test MD5
 
-function md5(){
+/*function md5(){
 	$base_path = "./upload/test/"; // 接收文件目录
 	$target_path = $base_path . basename($_FILES ['uploadfile'] ['name']);
 	$original = $_FILES['uploadfile']['tmp_name'];
@@ -375,6 +375,7 @@ function md5(){
 		}
 	}
 }
+*/
 function get_info()
 {
 	$request_get = Slim::getInstance()->request();
