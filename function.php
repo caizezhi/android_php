@@ -342,17 +342,16 @@ function downloadVoi(){
 }
 //test MD5
 
-/*function md5(){
+function md5(){
 	$base_path = "./upload/test/"; // 接收文件目录
 	$target_path = $base_path . basename($_FILES ['uploadfile'] ['name']);
 	$original = $_FILES['uploadfile']['tmp_name'];
 	$md5 = md5_file($original);
-	$name = $_FILES['uploadfile']['name'];
-	$url = "http://101.200.177.122/Android_HT/upload/test/" . $name;
 	$db = dbMysql();
 	$sql_check = "SELECT `url` FROM `test` WHERE `md5` = '{$md5}'";
 	$is_exist = $db->query($sql_check)->fetchAll(PDO::FETCH_ASSOC);
 	if($is_exist){
+		$name = $_FILES['uploadfile']['name'];
 		$sql = "INSERT INTO `test`(`name`,`url`,`md5`) VALUES('{$name}','{$is_exist[0]['url']}','{$md5}')";
 		$is_insert = $db->query($sql);
 		if($is_insert){
@@ -364,6 +363,8 @@ function downloadVoi(){
 	}
 	else{
 		if(move_uploaded_file($_FILES ['uploadfile'] ['tmp_name'], $target_path)){
+			$name = $_FILES['uploadfile']['name'];
+			$url = "http://101.200.177.122/Android_HT/upload/test/" . $name;
 			$sql = "INSERT INTO `test` (`name`,`url`,`md5`) VALUES('{$name}','{$url}','{$md5}')";
 			$is_insert = $db->query($sql);
 			if($is_insert){
@@ -375,7 +376,7 @@ function downloadVoi(){
 		}
 	}
 }
-*/
+
 function get_info()
 {
 	$request_get = Slim::getInstance()->request();
