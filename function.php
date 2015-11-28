@@ -431,7 +431,7 @@ function login(){
 			if($reslut){
 				$_SESSION['admin'] = true;
 				$_SESSION['nickname']=$reslut[0]['nickname'];
-				output(array("status"=>"success","action"=>"login"));
+				output(array("status"=>"success","action"=>"login","uid"=>$reslut[0]['uid']));
 			}
 			else{
 				error("You are not a teacher");
@@ -444,7 +444,7 @@ function login(){
 			if($reslut){
 				$_SESSION['admin'] = true;
 				$_SESSION['nickname']=$reslut[0]['nickname'];
-				output(array("status"=>"success","action"=>"login"));
+				output(array("status"=>"success","action"=>"login","uid"=>$reslut[0]['uid']));
 			}
 			else{
 				error("You are not a student");
