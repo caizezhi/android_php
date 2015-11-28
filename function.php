@@ -184,7 +184,7 @@ function uploadVoi()
 
 }
 
-function uploadPic(){
+/*function uploadPic(){
 	$userId = $_POST['userId'];
 	$base_path = "./upload/" . $userId . "/"; // 接收文件目录
 	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
@@ -226,6 +226,54 @@ function uploadPic(){
             error("No such lessosn");
         }
     }
+	else{
+		output(array("action"=>"upload", "status"=>"failed"));
+	}
+}*/
+
+function uploadPic(){
+	$userId = $_POST['userId'];
+	$base_path = "./upload/" . $userId . "/"; // 接收文件目录
+	$target_path = $base_path . basename ( $_FILES ['uploadfile'] ['name'] );
+	$md5 = md5_file($_FILES['uploadfile']['tmp_name']);
+	if(move_uploaded_file ( $_FILES ['uploadfile'] ['tmp_name'], $target_path)){
+		$name = $_FILES['uploadfile']['name'];
+		$url = "http://101.200.177.122/Android_HT/upload/" . $userId . "/" . $name;
+		$lessonName = $_POST['lessonName'];
+		$domainID = $_POST['domainId'];
+		$subDomainID = $_POST['subDomainId'];
+		$level = $_POST['level'];
+		$exerciseIndex = $_POST['exerciseIndex'];
+		$exerciseName = $_POST['exerciseName'];
+		$exerciseType = $_POST['exerciseType'];
+		$unitIndex = $_POST['unitIndex'];
+		$schoolId = $_POST['schoolId'];
+		$optionIndex = $_POST['optionIndex'];
+		$resourceType = $_POST['resourceType'];
+		$interIndex = $_POST['interIndex'];
+		$get_lesson_id = "SELECT `uid` FROM `private_lesson` WHERE `lesson` = '{$lessonName}' AND `id_teacher` = '{$userId}'";
+		$db = dbMysql();
+		$get_id_result = $db->query($get_lesson_id)->fetchAll(PDO::FETCH_ASSOC);
+		if($get_id_result){
+			$lesson_id = $get_id_result[0]['uid'];
+			$sql = "INSERT INTO `picture` (`name`, `userId`, `schoolId`, `lessonName`,`domainID`,`subDomainID`,`level`,`exerciseIndex`,`exerciseName`,`exerciseType`,`unitIndex`,`optionIndex`,`resourceType`,`interIndex`,`url`,`lessonId`,`md5`) VALUES('{$name}','{$userId}','{$schoolId}','{$lessonName}','{$domainID}','{$subDomainID}','{$level}','{$exerciseIndex}','{$exerciseName}','{$exerciseType}','{$unitIndex}','{$optionIndex}','{$resourceType}','{$interIndex}','{$url}','{$lesson_id}','{$md5}')";
+			$is_insert = $db->query($sql);
+			if ($is_insert) {
+				$sql_get_id = "SELECT `uid` FROM `picture` WHERE `url` = '{$url}' LIMIT 1";
+				$result = $db->query($sql_get_id)->fetchAll(PDO::FETCH_ASSOC);
+				if ($result) {
+					output(array("uid" => $result[0]['uid']));
+				} else {
+					output(array("action" => "get_id", "status" => "failed"));
+				}
+			} else {
+				output(array("action" => "insert", "status" => "failed"));
+			}
+		}
+		else {
+			error("No such lessosn");
+		}
+	}
 	else{
 		output(array("action"=>"upload", "status"=>"failed"));
 	}
