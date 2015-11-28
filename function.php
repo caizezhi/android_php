@@ -73,20 +73,24 @@ function get_lesson_info($lesson, $uid, $is_public, $type){
 
 function createLesson(){
 	$request = Slim::getInstance()->request();
-	$lesson = trim($request->post('lesson'));
-	$id_teacher = trim($request->post('id_teacher'));
-	$id_school = trim($request->post('id_school'));
-	$type = trim($request->post('type'));
-	$info = trim($request->post('info'));
-	if(!isset($lesson)||!isset($type)||!isset($info)){
+	$lesson = trim($request->post('lesson_name'));
+	$id_teacher = trim($request->post('teacher_id'));
+	$id_school = trim($request->post('school_id'));
+	$m_domain = trim($request->post('masterDomain_id'));
+	$s_domain = trim($request->post('subDomain_id'));
+	$level = trim($request->post('level'));
+	$description = trim($request->post('description'));
+	if(!isset($lesson)||!isset($id_teacher)||!isset($id_school)){
 		error("invalid request");
 	}
 	else{
-		$sql = "INSERT INTO `private_lesson` (`lesson`,`id_teacher`,`id_school`,`type`,`info`) VALUES('{$lesson}','{$id_teacher}','{$id_school}','{$type}','{$info}')";
+		$sql = "INSERT INTO `private_lesson` (`lesson`,`id_teacher`,`id_school`,`m_domain`,`s_domain`,`desctiption`,`level`) VALUES('{$lesson}','{$id_teacher}','{$id_school}','{$m_domain}','{$s_domain}','{$description}','{$level}')";
 		$db = dbMysql();
 		$result = $db->query($sql);
 		if($result){
-			output(array("status"=>"success","action"=>"upload"));
+			$get_uid = "SELECT `uid` FROM `private_lesson` WHERE `lesson`='{$lesson}' AND `id_teacer` = '{$id_teacher}'";
+			$uid = $db->query($get_uid)->fetchAll(PDO::FETCH_ASSOC);
+			output(array("status"=>"success","action"=>"upload","uid"=>$uid[0]['uid']));
 		}
 		else{
 			error("false");
@@ -134,11 +138,11 @@ function checklesson($id_lesson){
 function uploadVoi()
 {
     $userId = $_POST['userId'];
-    $base_path = "./upload" . $userId;
+    $base_path = "./upload" . $userId . "/";
     $target_path = $base_path . basename($_FILES['uploadfile']['name']);
     if (move_uploaded_file($_FILES ['uploadfile'] ['tmp_name'], $target_path)) {
         $name = $_FILES['uploadfile']['name'];
-        $url = "http://101.200.177.122/Android_HT/upload/" . $userId . $name;
+        $url = "http://101.200.177.122/Android_HT/upload/" . $userId . "/" . $name;
         $lessonName = $_POST['lessonName'];
         $domainID = $_POST['domainId'];
         $subDomainID = $_POST['subDomainId'];
